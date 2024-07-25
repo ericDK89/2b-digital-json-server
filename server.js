@@ -1,38 +1,20 @@
-const jsonServer = require("json-server");
-const cors = require("cors");
-const server = jsonServer.create();
-const router = jsonServer.router("db.json");
+const express = require('express');
+const cors = require('cors');
+const app = express();
 
-// Configure CORS options
 const corsOptions = {
-  origin: '*', // Permite todas as origens. Altere conforme necessário.
+  origin: '*', // Permite todas as origens
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204
+  credentials: true
 };
 
-// Use the CORS middleware
-server.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
-// Use the default middleware
-const middlewares = jsonServer.defaults();
-server.use(middlewares);
-
-// Add this before server.use(router)
-server.use(
-  // Add custom route here if needed
-  jsonServer.rewriter({
-    "/api/*": "/$1",
-  })
-);
-
-server.use(router);
-
-// Listen to port
-server.listen(3000, () => {
-  console.log("JSON Server is running on port 3000");
+app.get('/api/product/:id', (req, res) => {
+  res.json({ product: req.params.id });
 });
 
-// Export the Server API
-module.exports = server;
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
